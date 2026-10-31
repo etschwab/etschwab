@@ -23,6 +23,7 @@ async function gql(query, variables) {
 const { user } = await gql(
   `query($login: String!) {
     user(login: $login) {
+      createdAt
       contributionsCollection {
         contributionCalendar {
           totalContributions
@@ -62,6 +63,44 @@ const weeks = calendar.weeks.map((w) => ({
   count: w.contributionDays.reduce((s, d) => s + d.contributionCount, 0),
 }));
 
+// Streaks need every day since the account exists, one year per request:
+// the API caps a range at one year.
+const days = new Map();
+const now = new Date();
+for (let year = new Date(user.createdAt).getUTCFullYear(); year <= now.getUTCFullYear(); year++) {
+  const from = new Date(Date.UTC(year, 0, 1)).toISOString();
+  const to = new Date(Math.min(Date.UTC(year, 11, 31, 23, 59, 59), now.getTime())).toISOString();
+  const { user: y } = await gql(
+    `query($login: String!, $from: DateTime!, $to: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $from, to: $to) {
+          contributionCalendar { weeks { contributionDays { date contributionCount } } }
+        }
+      }
+    }`,
+    { login, from, to },
+  );
+  for (const w of y.contributionsCollection.contributionCalendar.weeks)
+    for (const d of w.contributionDays) days.set(d.date, d.contributionCount);
+}
+
+// Today without a contribution yet does not break the current streak.
+const sorted = [...days.entries()].sort(([a], [b]) => a.localeCompare(b));
+const today = now.toISOString().slice(0, 10);
+let longest = 0;
+let run = 0;
+for (const [, count] of sorted) {
+  run = count > 0 ? run + 1 : 0;
+  longest = Math.max(longest, run);
+}
+let current = 0;
+for (let i = sorted.length - 1; i >= 0; i--) {
+  const [date, count] = sorted[i];
+  if (count > 0) current++;
+  else if (date === today) continue;
+  else break;
+}
+
 const themes = {
   light: { bg: "#ffffff", border: "#d0d7de", ink: "#1f2328", muted: "#656d76", track: "#eaeef2", accent: "#0969da" },
   dark: { bg: "#0d1117", border: "#30363d", ink: "#e6edf3", muted: "#8d96a0", track: "#21262d", accent: "#4493f8" },
@@ -74,11 +113,22 @@ const MONTHS = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", 
 
 function card(t) {
   const W = 840;
-  const H = 160;
-  const repos = `<text x="32" y="92" font-size="52" font-weight="600" fill="${t.ink}">${fmt(user.repositories.totalCount)}</text>
-    <text x="32" y="120" font-size="13" fill="${t.muted}">Öffentliche Repos</text>`;
+  const H = 168;
+  const tage = (n) => `${n} ${n === 1 ? "Tag" : "Tage"}`;
+  const stats = [
+    [fmt(user.repositories.totalCount), "Öffentliche Repos"],
+    [tage(current), "Aktuelle Streak"],
+    [tage(longest), "Längste Streak"],
+  ];
+  const statSvg = stats
+    .map(([value, label], i) => {
+      const x = 32 + i * 148;
+      return `<text x="${x}" y="88" font-size="32" font-weight="600" fill="${t.ink}">${esc(value)}</text>
+    <text x="${x}" y="114" font-size="13" fill="${t.muted}">${esc(label)}</text>`;
+    })
+    .join("\n    ");
 
-  const barX = 264;
+  const barX = 520;
   const barW = W - barX - 32;
   let acc = 0;
   const segments = top
@@ -91,8 +141,8 @@ function card(t) {
     .join("");
   const legend = top
     .map((l, i) => {
-      const x = barX + (i % 3) * (barW / 3);
-      const y = 94 + Math.floor(i / 3) * 30;
+      const x = barX + (i % 2) * (barW / 2);
+      const y = 90 + Math.floor(i / 2) * 26;
       return `<circle cx="${x + 5}" cy="${y - 4}" r="5" fill="${l.color}"/>
     <text x="${x + 18}" y="${y}" font-size="14" fill="${t.ink}">${esc(l.name)} <tspan fill="${t.muted}">${l.pct.toFixed(1)}%</tspan></text>`;
     })
@@ -101,7 +151,7 @@ function card(t) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family='${font}' role="img" aria-label="GitHub-Statistik von ${esc(login)}">
   <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="12" fill="${t.bg}" stroke="${t.border}"/>
   <g>
-    ${repos}
+    ${statSvg}
   </g>
   <line x1="${barX - 32}" y1="32" x2="${barX - 32}" y2="${H - 32}" stroke="${t.border}"/>
   <text x="${barX}" y="38" font-size="13" fill="${t.muted}">Meistgenutzte Sprachen</text>
@@ -163,4 +213,4 @@ writeFileSync(join(outDir, "stats.svg"), card(themes.light));
 writeFileSync(join(outDir, "stats-dark.svg"), card(themes.dark));
 writeFileSync(join(outDir, "activity.svg"), activity(themes.light));
 writeFileSync(join(outDir, "activity-dark.svg"), activity(themes.dark));
-console.log(`stats: ${user.repositories.totalCount} repos, ${top.length} languages, ${calendar.totalContributions} contributions`);
+console.log(`stats: ${user.repositories.totalCount} repos, ${top.length} languages, ${calendar.totalContributions} contributions, streak ${current}/${longest}`);

@@ -19,6 +19,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: 3D-Contribution-Grafik
         uses: yoshi389111/github-profile-3d-contrib@v0.9.3
         env:
@@ -30,10 +34,7 @@ jobs:
           mkdir -p dist
           cp profile-3d-contrib/profile-green-animate.svg dist/contrib-3d.svg
           cp profile-3d-contrib/profile-night-green.svg dist/contrib-3d-dark.svg
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+          node scripts/trim-3d.mjs dist/contrib-3d.svg dist/contrib-3d-dark.svg
 
       - name: Statistik-Karte
         run: node scripts/stats.mjs dist

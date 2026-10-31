@@ -2,7 +2,7 @@
 
 Ich entwickle Web-Apps vom ersten Entwurf bis zum Deployment: Next.js, React und TypeScript im Frontend, Supabase, Postgres und Cloudflare Workers im Backend. Wichtig sind mir ein ruhiges, durchdachtes Design und Software, die im Alltag wirklich benutzt wird.
 
-Neben dem Code spiele ich seit über zehn Jahren Unihockey im Team.
+
 
 ### Projekte
 

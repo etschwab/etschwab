@@ -1,0 +1,51 @@
+name: Profil-Grafiken
+
+# Baut einmal täglich die 3D-Grafik und die Statistik-Karte neu und legt sie
+# auf den Branch `output`, auf den das README verlinkt.
+
+on:
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 3D-Contribution-Grafik
+        uses: yoshi389111/github-profile-3d-contrib@v0.9.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: 3D-Grafik nach dist kopieren
+        run: |
+          mkdir -p dist
+          cp profile-3d-contrib/profile-green-animate.svg dist/contrib-3d.svg
+          cp profile-3d-contrib/profile-night-green.svg dist/contrib-3d-dark.svg
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Statistik-Karte
+        run: node scripts/stats.mjs dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Auf den Branch output veröffentlichen
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+          commit_message: Profil-Grafiken aktualisieren
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

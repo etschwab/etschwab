@@ -1,11 +1,11 @@
 name: Profil-Grafiken
 
-# Baut einmal täglich die 3D-Grafik und die Statistik-Karte neu und legt sie
-# auf den Branch `output`, auf den das README verlinkt.
+# Baut alle sechs Stunden die Statistik- und die Aktivitäts-Karte neu und
+# legt sie auf den Branch `output`, auf den das README verlinkt.
 
 on:
   schedule:
-    - cron: "23 3 * * *"
+    - cron: "23 */6 * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -22,19 +22,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: 3D-Contribution-Grafik
-        uses: yoshi389111/github-profile-3d-contrib@v0.9.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          USERNAME: ${{ github.repository_owner }}
-
-      - name: 3D-Grafik nach dist kopieren
-        run: |
-          mkdir -p dist
-          cp profile-3d-contrib/profile-green-animate.svg dist/contrib-3d.svg
-          cp profile-3d-contrib/profile-night-green.svg dist/contrib-3d-dark.svg
-          node scripts/trim-3d.mjs dist/contrib-3d.svg dist/contrib-3d-dark.svg
 
       - name: Statistik-Karte
         run: node scripts/stats.mjs dist

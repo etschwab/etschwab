@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="168" viewBox="0 0 840 168" font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif' role="img" aria-label="GitHub-Statistik von etschwab">
+  <rect x="0.5" y="0.5" width="839" height="167" rx="12" fill="#ffffff" stroke="#d0d7de"/>
+  <g>
+    <text x="32" y="88" font-size="32" font-weight="600" fill="#1f2328">18</text>
+    <text x="32" y="114" font-size="13" fill="#656d76">Öffentliche Repos</text>
+    <text x="180" y="88" font-size="32" font-weight="600" fill="#1f2328">0 Tage</text>
+    <text x="180" y="114" font-size="13" fill="#656d76">Aktuelle Streak</text>
+    <text x="328" y="88" font-size="32" font-weight="600" fill="#1f2328">9 Tage</text>
+    <text x="328" y="114" font-size="13" fill="#656d76">Längste Streak</text>
+  </g>
+  <line x1="488" y1="32" x2="488" y2="136" stroke="#d0d7de"/>
+  <text x="520" y="38" font-size="13" fill="#656d76">Meistgenutzte Sprachen</text>
+  <clipPath id="bar"><rect x="520" y="52" width="288" height="8" rx="4"/></clipPath>
+  <rect x="520" y="52" width="288" height="8" rx="4" fill="#eaeef2"/>
+  <g clip-path="url(#bar)"><rect x="520.0" y="52" width="212.7" height="8" fill="#3178c6"/><rect x="734.7" y="52" width="33.7" height="8" fill="#663399"/><rect x="770.4" y="52" width="11.4" height="8" fill="#e34c26"/><rect x="783.8" y="52" width="8.3" height="8" fill="#336790"/><rect x="794.1" y="52" width="7.0" height="8" fill="#f34b7d"/><rect x="803.1" y="52" width="2.8" height="8" fill="#f1e05a"/></g>
+  <g>
+    <circle cx="525" cy="86" r="5" fill="#3178c6"/>
+    <text x="538" y="90" font-size="14" fill="#1f2328">TypeScript <tspan fill="#656d76">74.5%</tspan></text>
+    <circle cx="669" cy="86" r="5" fill="#663399"/>
+    <text x="682" y="90" font-size="14" fill="#1f2328">CSS <tspan fill="#656d76">12.4%</tspan></text>
+    <circle cx="525" cy="112" r="5" fill="#e34c26"/>
+    <text x="538" y="116" font-size="14" fill="#1f2328">HTML <tspan fill="#656d76">4.7%</tspan></text>
+    <circle cx="669" cy="112" r="5" fill="#336790"/>
+    <text x="682" y="116" font-size="14" fill="#1f2328">PLpgSQL <tspan fill="#656d76">3.6%</tspan></text>
+    <circle cx="525" cy="138" r="5" fill="#f34b7d"/>
+    <text x="538" y="142" font-size="14" fill="#1f2328">C++ <tspan fill="#656d76">3.1%</tspan></text>
+    <circle cx="669" cy="138" r="5" fill="#f1e05a"/>
+    <text x="682" y="142" font-size="14" fill="#1f2328">JavaScript <tspan fill="#656d76">1.7%</tspan></text>
+  </g>
+</svg>

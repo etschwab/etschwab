@@ -18,7 +18,7 @@ Ich entwickle Web-Apps vom ersten Entwurf bis zum Deployment, mit einem Auge fü
 - [**Rankly**](https://github.com/etschwab/ranking) · Tier-List-Rankings für Gruppen, gemeinsam abstimmen und live auswerten · [live ↗](https://rankly-nu.vercel.app)
 - [**Portfolio Magazine**](https://github.com/etschwab/bewerben) · Bewerbungsportfolio im Stil einer Sportmagazin-Sonderausgabe · [live ↗](https://bewerben.vercel.app)
 - [**CarPin**](https://github.com/etschwab/carpin) · iPhone-Prototyp: Parkplatz speichern, Parktimer, Route zurück zum Auto
-- [**Planary Casino**](https://github.com/Fallka0/planary-casino) · Spielgeld-Lobby mit gemeinsamem Wallet und nachprüfbaren Quoten · [live ↗](https://planary-casino.vercel.app)
+- [**Planary Casino**](https://github.com/Fallka0/planary-casino) · Spielgeld-Lobby mit gemeinsamem Wallet und nachprüfbaren Quoten · [live ↗](https://casino.planary.ch)
 
 #### Stack
 
